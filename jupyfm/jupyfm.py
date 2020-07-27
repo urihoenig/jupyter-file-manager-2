@@ -9,7 +9,8 @@ class Jupyfm(LargeFileManager):
             with self.perm_to_403():
                 if os.path.isdir(old_path):
                     for i in os.scandir(path=old_path):
-                        raise web.HTTPError(500, u'Renaming a folder with subfolders is not allowed: %s' % (old_path))
+                        if i.is_dir():
+                            raise web.HTTPError(500, u'Renaming a folder with subfolders is not allowed: %s' % (old_path))
         except web.HTTPError:
             raise
         except Exception as e:
